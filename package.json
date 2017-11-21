@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "description": "Command line tool for extracting Twitter data to PostgreSQL databases",
   "main": "index.js",
+  "bin": {
+	"twitter2pg": "index.js"
+  },
   "scripts": {
 	"coverage": "istanbul cover node_modules/tape/bin/tape tests/test.js && cat ./coverage/lcov.info | coveralls",
 	"docs": "documentation build */**.js -f html -o docs",
