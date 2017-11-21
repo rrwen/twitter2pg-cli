@@ -20,7 +20,7 @@ Command line tool for extracting Twitter data to PostgreSQL databases
 2. Install [twitter2pg-cli](https://www.npmjs.com/package/twitter2pg-cli) via `npm`
 
 ```
-npm install --save twitter2pg-cli
+npm install -g twitter2pg-cli
 ```
 
 For the latest developer version, see [Developer Install](#developer-install).
@@ -30,7 +30,7 @@ For the latest developer version, see [Developer Install](#developer-install).
 An example usage of twitter2pg-cli:
 
 ```
-var twitter2pgcli = require('twitter2pg-cli');
+twitter2pg --help
 ```
 
 See [Documentation](https://rrwen.github.io/twitter2pg-cli) for more details.
@@ -111,7 +111,7 @@ npm install
 2. Enter into folder `cd twitter2pg-cli`
 3. Ensure [devDependencies](https://docs.npmjs.com/files/package.json#devdependencies) are installed and available
 4. Run tests
-5. Results are saved to `./tests/log` with each file corresponding to a version tested
+5. Results are saved to [tests/log](tests/log) with each file corresponding to a version tested
 
 ```
 npm install
