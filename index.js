@@ -1,6 +1,9 @@
 // Richard Wen
 // rrwen.dev@gmail.com
 
+var argv = require('yargs').argv;
+var twitter2pg = require('twitter2pg');
+
 /**
  * Description.
  *
@@ -11,6 +14,4 @@
  * @example
  * var twitter2pgcli = require('../index.js');
  */
-module.exports = options => {
-	options = options || {};
-};
+twitter2pg(argv);

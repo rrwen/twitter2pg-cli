@@ -33,6 +33,7 @@
     "tape": "^4.8.0"
   },
   "dependencies": {
-    "twitter2pg": "^1.0.0"
+    "twitter2pg": "^1.0.0",
+    "yargs": "^10.0.3"
   }
 }
