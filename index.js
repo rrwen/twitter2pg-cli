@@ -103,6 +103,7 @@ if (cmd == 'create') {
 if (cmd == 'set') {
 	defaultJSON.file = argv._[1];
 	fs.writeFileSync(defaultPath, JSON.stringify(defaultJSON));
+	console.log('\nDefault --file set to:\n', defaultJSON.file);
 }
 
 // (command_view) View default options file path
