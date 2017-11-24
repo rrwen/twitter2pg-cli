@@ -2,9 +2,9 @@
   "name": "twitter2pg-cli",
   "version": "0.0.0",
   "description": "Command line tool for extracting Twitter data to PostgreSQL databases",
-  "main": "index.js",
+  "main": "bin/twitter2pg",
   "bin": {
-    "twitter2pg": "index.js"
+    "twitter2pg": "bin/twitter2pg"
   },
   "scripts": {
     "docs": "documentation build */**.js -f html -o docs",

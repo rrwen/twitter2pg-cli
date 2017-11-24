@@ -1,0 +1,1 @@
+{"twitter.method":"get","twitter.path":"search/tweets","twitter.params":"{\"q\": \"twitter\"}","pg.table":"twitter_data","pg.column":"tweets","pg.query":"INSERT INTO $options.pg.table($options.pg.column) VALUES ($1);","file":""}
