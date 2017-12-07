@@ -95,7 +95,7 @@ if (cmd == 'query') {
 			process.exit(0);
 		})
 		.catch(err => {
-			console.log('\nError:\n', err.message);
+			console.error('\nError:\n', err.message);
 		});
 }
 
@@ -193,7 +193,7 @@ if (argv._.length < 1) {
 		// (command_stream_run) Start streaming process and log errors
 		var stream = twitter2pg(argv);
 		stream.on('error', function(err) {
-			console.log(quote + new Date().toISOString() + quote + delim + quote + 'error' + quote + delim + quote + err.message + quote + delim + quote + JSON.stringify(err) + quote + delim);
+			console.error(quote + new Date().toISOString() + quote + delim + quote + 'error' + quote + delim + quote + err.message + quote + delim + quote + JSON.stringify(err) + quote + delim);
 		});
 	} else {
 		
@@ -207,7 +207,7 @@ if (argv._.length < 1) {
 				process.exit(0);
 			})
 			.catch(err => {
-				console.log(quote + new Date().toISOString() + quote + delim + quote + 'error' + quote + delim + quote + err[0].message + quote + delim + quote + JSON.stringify(err).replace(/"/g, '""') + quote + delim);
+				console.error(quote + new Date().toISOString() + quote + delim + quote + 'error' + quote + delim + quote + err[0].message + quote + delim + quote + JSON.stringify(err).replace(/"/g, '""') + quote + delim);
 				process.exit(1);
 			});
 	}
