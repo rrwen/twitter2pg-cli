@@ -8,5 +8,6 @@ node_js:
 install:
   - npm install
 script:
-  - npm run docs
-  - npm test
+  - git clone https://github.com/rrwen/twitter2pg-cli
+  - cd twitter2pg-cli
+  - npm install

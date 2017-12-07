@@ -7,7 +7,6 @@
     "twitter2pg": "bin/twitter2pg"
   },
   "scripts": {
-    "docs": "documentation build */**.js -f html -o docs",
     "test": "node ./tests/test.js"
   },
   "directories": {
@@ -24,7 +23,6 @@
   },
   "homepage": "https://github.com/rrwen/twitter2pg-cli#readme",
   "devDependencies": {
-    "documentation": "^5.3.3",
     "moment": "^2.19.1",
     "tape": "^4.8.0"
   },

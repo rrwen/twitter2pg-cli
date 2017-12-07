@@ -27,13 +27,13 @@ For the latest developer version, see [Developer Install](#developer-install).
 
 ## Usage
 
-An example usage of twitter2pg-cli:
+Get help
 
 ```
 twitter2pg --help
 ```
 
-See [Documentation](https://rrwen.github.io/twitter2pg-cli) for more details.
+See [twitter2pg](https://rrwen.github.io/twitter2pg) for more details.
 
 ## Contributions
 
@@ -118,16 +118,6 @@ npm install
 npm test
 ```
 
-### Documentation
-
-Use [documentationjs](https://www.npmjs.com/package/documentation) to generate html documentation in the `docs` folder:
-
-```
-npm run docs
-```
-
-See [JSDoc style](http://usejsdoc.org/) for formatting syntax.
-
 ### Upload to Github
 
 1. Ensure [git](https://git-scm.com/) is installed
@@ -157,14 +147,20 @@ npm publish
 
 ### Implementation
 
-A description of the overall implementation of twitter2pg-cli.
+The module [twitter2pg](https://www.npmjs.com/package/twitter2pg) uses the following [npm](https://www.npmjs.com/) packages for its implementation:
+
+npm | Purpose
+--- | ---
+[yargs](https://www.npmjs.com/package/yargs) | Command line builder and parser
+[twitter2pg](https://www.npmjs.com/package/twitter2pg) | Extracts Twitter data to PostgreSQL
+[dotenv](https://www.npmjs.com/package/dotenv) | Load environmental variables from a file
+[opn](https://www.npmjs.com/package/opn) | Open online browser documentation
+[pg](https://www.npmjs.com/package/pg) | Send queries to PostgreSQL database
 
 ```
-component   <-- detail
-    |
-component   <-- detail
-    |
-component   <-- detail
-    |
-component   <-- detail
+yargs
+   |--- twitter2pg <-- default command
+   |--- dotenv       <-- file
+   |--- opn            <-- doc
+   |--- pg              <-- query
 ```
