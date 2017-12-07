@@ -24,11 +24,20 @@ For the latest developer version, see [Developer Install](#developer-install).
 
 ## Usage
 
-Get help
+Get help:
 
 ```
 twitter2pg --help
 ```
+
+Create template `.env` file:
+
+```
+twitter2pg file path/to/.env
+```
+
+Set defaults for 
+
 
 See [twitter2pg](https://rrwen.github.io/twitter2pg) for more details.
 
