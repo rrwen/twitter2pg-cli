@@ -2,9 +2,7 @@
 
 Richard Wen  
 rrwen.dev@gmail.com  
-
-* [Documentation](https://rrwen.github.io/twitter2pg-cli)
-
+  
 Command line tool for extracting Twitter data to PostgreSQL databases
 
 [![npm version](https://badge.fury.io/js/twitter2pg-cli.svg)](https://badge.fury.io/js/twitter2pg-cli)
