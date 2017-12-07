@@ -4,8 +4,9 @@
 // (packages) Package dependencies
 var fs = require('fs');
 var moment = require('moment');
-var twitter2pgcli = require('../index.js');
 var test = require('tape');
+
+const {spawn} = require('child_process');
 
 // (test_info) Get package metadata
 var json = JSON.parse(fs.readFileSync('package.json', 'utf8'));
@@ -22,6 +23,9 @@ for (var k in json.devDependencies) {
 if (!fs.existsSync('./tests/log')){
     fs.mkdirSync('./tests/log');
 }
+if (!fs.existsSync('./tests/out')){
+    fs.mkdirSync('./tests/out');
+}
 var testFile = './tests/log/test_' + json.version.split('.').join('_') + '.txt';
 test.createStream().pipe(fs.createWriteStream(testFile));
 test.createStream().pipe(process.stdout);
@@ -34,21 +38,86 @@ test('Tests for ' + json.name + ' (' + json.version + ')', t => {
     t.comment('Dependencies: ' + testedPackages.join(', '));
     t.comment('Developer: ' + devPackages.join(', '));
 	
-	// (test_pass) Pass a test
-	t.pass('(MAIN) test pass');
+	// (test_help) Test show help
+	var child = spawn('node', ['./bin/twitter2pg', '-h']);
+	child.stderr.on('data', data => {
+		t.fail('(MAIN) help: ' + data);
+	});
+	child.on('close', code => {
+		t.equals(code, 0, '(MAIN) help');
+	});
 	
-	// (test_equal) Equal test
-	var actual = 1;
-	var expected = 1;
-	t.equal(actual, expected, '(A) Equal test');
+	// (test_doc_twitter2pg) Test show doc twitter2pg
+	var child = spawn('node', ['./bin/twitter2pg', 'doc', 'twitter2pg']);
+	child.stderr.on('data', data => {
+		t.fail('(MAIN) doc twitter2pg: ' + data);
+	});
+	child.on('close', code => {
+		t.equals(code, 0, '(MAIN) doc twitter2pg');
+	});
 	
-	// (test_deepequal) Deep equal test
-	var actual = {a: 1, b: {c: 2}, d: [3]};
-	var expected = {a: 1, b: {c: 2}, d: [3]};
-	t.deepEquals(actual, expected, '(B) Deep equal test');
+	// (test_doc_twitter) Test show doc twitter
+	var child = spawn('node', ['./bin/twitter2pg', 'doc', 'twitter']);
+	child.stderr.on('data', data => {
+		t.fail('(MAIN) doc twitter: ' + data);
+	});
+	child.on('close', code => {
+		t.equals(code, 0, '(MAIN) doc twitter');
+	});
 	
-	// (test_fail) Fail a test
-	// t.fail('(MAIN) test fail');
+	// (test_doc_pg) Test show doc pg
+	var child = spawn('node', ['./bin/twitter2pg', 'doc', 'pg']);
+	child.stderr.on('data', data => {
+		t.fail('(MAIN) doc pg: ' + data);
+	});
+	child.on('close', code => {
+		t.equals(code, 0, '(MAIN) doc pg');
+	});
+	
+	// (test_file) Test create env file
+	var child = spawn('node', ['./bin/twitter2pg', 'file', './tests/out/.env']);
+	child.stderr.on('data', data => {
+		t.fail('(MAIN) env: ' + data);
+	});
+	child.on('close', code => {
+		t.equals(code, 0, '(MAIN) env');
+	});
+	
+	// (test_set) Test set default
+	var child = spawn('node', ['./bin/twitter2pg', 'set', 'file', './tests/out/.env']);
+	child.stderr.on('data', data => {
+		t.fail('(MAIN) set: ' + data);
+	});
+	child.on('close', code => {
+		t.equals(code, 0, '(MAIN) set');
+		
+		// (test_delete) Test delete default
+		var child = spawn('node', ['./bin/twitter2pg', 'delete', 'file']);
+		child.stderr.on('data', data => {
+			t.fail('(MAIN) delete: ' + data);
+		});
+		child.on('close', code => {
+			t.equals(code, 0, '(MAIN) delete');
+		});
+	});
+	
+	// (test_query_create) Test query CREATE
+	var child = spawn('node', ['./bin/twitter2pg', 'query', 'CREATE TABLE IF NOT EXISTS twitter_data(tweets jsonb);']);
+	child.stderr.on('data', data => {
+		t.fail('(MAIN) query CREATE: ' + data);
+	});
+	child.on('close', code => {
+		t.equals(code, 0, '(MAIN) query CREATE');
+		
+		// (test_query_drop) Test query DROP
+		var child = spawn('node', ['./bin/twitter2pg', 'query', 'DROP TABLE twitter_data;']);
+		child.stderr.on('data', data => {
+			t.fail('(MAIN) query DROP: ' + data);
+		});
+		child.on('close', code => {
+			t.equals(code, 0, '(MAIN) query DROP');
+		});
+	});
 	
 	t.end();
 });

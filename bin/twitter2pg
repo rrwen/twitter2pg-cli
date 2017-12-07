@@ -85,13 +85,14 @@ if (cmd == 'query') {
 	const client = new Client(argv.pg.connection);
 	client.connect()
 		.then(() => {
-			return client.query(argv._[1])
+			return client.query(argv.sql)
 				.then(res => {
 					console.log(res.rows);
 				});
 		})
 		.then(() => {
 			client.end();
+			process.exit(0);
 		})
 		.catch(err => {
 			console.log('\nError:\n', err.message);
@@ -99,11 +100,11 @@ if (cmd == 'query') {
 }
 
 // (command_init) Initialize options file
-if (cmd == 'init') {
-	//var templatePath = path.join(__dirname, 'config/template.env');
-	//var read = fs.createReadStream(templatePath);
-	//var write = fs.createWriteStream(argv._[1]);
-	//read.pipe(write);
+if (cmd == 'file') {
+	var templatePath = path.join(__dirname, 'template.env');
+	var read = fs.createReadStream(templatePath);
+	var write = fs.createWriteStream(argv.path);
+	read.pipe(write);
 }
 
 // (command_defaults) View default options
@@ -192,7 +193,7 @@ if (argv._.length < 1) {
 		// (command_stream_run) Start streaming process and log errors
 		var stream = twitter2pg(argv);
 		stream.on('error', function(err) {
-			console.log(quote + new Date().toISOString() + quote + delim + quote + 'error' + quote + delim + quote + err.message + quote + delim);
+			console.log(quote + new Date().toISOString() + quote + delim + quote + 'error' + quote + delim + quote + err.message + quote + delim + quote + JSON.stringify(err) + quote + delim);
 		});
 	} else {
 		
@@ -203,7 +204,11 @@ if (argv._.length < 1) {
 					console.log(quote + new Date().toISOString() + quote + delim + quote + 'success' + quote + delim + delim);
 				}
 				data.pg.client.end();
-				process.exit();
+				process.exit(0);
+			})
+			.catch(err => {
+				console.log(quote + new Date().toISOString() + quote + delim + quote + 'error' + quote + delim + quote + err[0].message + quote + delim + quote + JSON.stringify(err).replace(/"/g, '""') + quote + delim);
+				process.exit(1);
 			});
 	}
 }
