@@ -15,8 +15,6 @@ Command line tool for extracting Twitter data to PostgreSQL databases
 
 ## Test Environment
 
-The test environment creates an isolated PostgreSQL database named `twitter2pg_database` to run tests on.
-
 To connect to Twiter and PostgreSQL, a `.env` file is required:
 
 1. Create a `.env` file in the root directory
@@ -29,6 +27,7 @@ TWITTER_ACCESS_TOKEN_KEY=***
 TWITTER_ACCESS_TOKEN_SECRET=***
 PGHOST=localhost
 PGPORT=5432
+PGDATABASE=twitter2pg_database
 PGUSER=super_user
 PGPASSWORD=***
 ```
