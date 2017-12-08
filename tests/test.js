@@ -110,22 +110,32 @@ test('Tests for ' + json.name + ' (' + json.version + ')', t => {
 	child.on('close', code => {
 		t.equals(code, 0, '(MAIN) query CREATE');
 		
-		// (test_twitter2pg) Test twitter2pg
+		// (test_twitter2pg_get) Test twitter2pg GET
 		var child = spawn('node', ['./bin/twitter2pg']);
 		child.stderr.on('data', data => {
-			t.fail('(MAIN) twitter2pg: ' + data.toString('utf8'));
+			t.fail('(MAIN) twitter2pg GET: ' + data.toString('utf8'));
 		});
 		child.on('close', code => {
+			t.equals(code, 0, '(MAIN) twitter2pg GET');
 			
-			// (test_query_drop) Test query DROP
-			var child = spawn('node', ['./bin/twitter2pg', 'query', 'DROP TABLE twitter_data;']);
+			// (test_twitter2pg_stream) Test twitter2pg STREAM
+			var child = spawn('node', ['./bin/twitter2pg', '--twitter.method stream', '--twitter.path statuses/filter', '--twitter.params "{\"track\": \"twitter\"}"']);
 			child.stderr.on('data', data => {
-				t.fail('(MAIN) query DROP: ' + data.toString('utf8'));
+				t.fail('(MAIN) twitter2pg STREAM: ' + data.toString('utf8'));
 			});
-			child.on('close', code => {
-				t.equals(code, 0, '(MAIN) query DROP');
+			child.stdout.on('data', data => {
+				t.pass('(MAIN) twitter2pg STREAM');
+				
+				// (test_query_drop) Test query DROP
+				var child = spawn('node', ['./bin/twitter2pg', 'query', 'DROP TABLE twitter_data;']);
+				child.stderr.on('data', data => {
+					t.fail('(MAIN) query DROP: ' + data.toString('utf8'));
+				});
+				child.on('close', code => {
+					t.equals(code, 0, '(MAIN) query DROP');
+					process.exit(0);
+				});
 			});
-			t.equals(code, 0, '(MAIN) twitter2pg');
 		});
 	});
 	t.end();
