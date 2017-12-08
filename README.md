@@ -30,14 +30,116 @@ Get help:
 twitter2pg --help
 ```
 
-Create template `.env` file:
+Open documentation in web browser:
+
+```
+twitter2pg doc twitter2pg
+twitter2pg doc twitter
+twitter2pg doc pg
+```
+
+### Environment File
+
+Create a template `.env` file for Twitter and PostgreSQL details:
+
+* Edit this file with your [Twitter API credentials](https://apps.twitter.com/) and [PostgreSQL details](https://www.postgresql.org/docs/current/static/auth-pg-hba-conf.html)
 
 ```
 twitter2pg file path/to/.env
 ```
 
-Set defaults for 
+Set default for the `.env` file:
 
+* Every `twitter2pg` command will now use the designated `.env` file
+
+```
+twitter2pg set file path/to/.env
+```
+
+### PostgreSQL Query
+
+Send  `query`a query to a PostgreSQL database after defining and setting the default [Environment File](#environment-file).  
+  
+The usage examples require a table named `twitter_data` which can be created below:
+
+row | tweets
+--- | ---
+1 | {...}
+2 | {...}
+3 | {...}
+... | ...
+
+```
+twitter2pg query "CREATE TABLE twitter_data(tweets jsonb);"
+```
+
+### REST API
+
+Setup default twitter options:
+
+1. Set Twitter REST method (one of `get`, `post`, `delete` or `stream`)
+2. Set [Twitter path](https://developer.twitter.com/en/docs/api-reference-index)
+3. Set Twitter parameters for path
+
+```
+twitter2pg set twitter.method get
+twitter2pg set twitter.path search/tweets
+twitter2pg set twitter.params '{"q":"twitter"}'
+```
+
+Setup default PostgreSQL options:
+
+1. Set table to store received Twitter data
+2. Set column to store received Twitter data
+3. Set [insert query](https://www.postgresql.org/docs/current/static/sql-insert.html) for received Twitter data
+4. Set [jsonata](https://www.npmjs.com/package/jsonata) filter before inserting
+
+```
+twitter2pg set pg.table twitter_data
+twitter2pg set pg.column tweets
+twitter2pg set pg.query "INSERT INTO $options.pg.table($options.pg.column) SELECT * FROM json_array_elements($1);"
+twitter2pg set jsonata statuses
+```
+
+Extract Twitter data into PostgreSQL table given setup options:
+
+```
+twitter2pg > log.csv
+```
+
+### Stream API
+
+Setup default twitter options:
+
+1. Set Twitter stream method
+2. Set Twitter path
+3. Set [Twitter stream parameters](https://developer.twitter.com/en/docs/tweets/filter-realtime/api-reference/post-statuses-filter.html)
+
+```
+twitter2pg set twitter.method stream
+twitter2pg set twitter.path statuses/filter
+twitter2pg set twitter.params '{"track":"twitter"}'
+```
+
+Setup default PostgreSQL options:
+
+1. Set table to store streamed Twitter data
+2. Set column to store streamed Twitter data
+3. Set [insert query](https://www.postgresql.org/docs/current/static/sql-insert.html) for streamed Twitter data
+4. Set [jsonata](https://www.npmjs.com/package/jsonata) filter before inserting
+
+```
+twitter2pg set pg.table twitter_data
+twitter2pg set pg.column tweets
+twitter2pg set pg.query "INSERT INTO $options.pg.table($options.pg.column) VALUES($1);"
+twitter2pg set jsonata statuses
+```
+
+Stream Twitter data into PostgreSQL table given setup options:
+
+```
+twitter2pg > log.csv
+```
 
 See [twitter2pg](https://rrwen.github.io/twitter2pg) for more details.
 
