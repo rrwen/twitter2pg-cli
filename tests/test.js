@@ -40,66 +40,68 @@ test('Tests for ' + json.name + ' (' + json.version + ')', t => {
     t.comment('Dependencies: ' + testedPackages.join(', '));
     t.comment('Developer: ' + devPackages.join(', '));
 	
+	t.comment('(A) command tests');
+	
 	// (test_help) Test show help
 	var child = spawn('node', ['./bin/twitter2pg', '-h']);
 	child.stderr.on('data', data => {
-		t.fail('(MAIN) help: ' + data.toString('utf8'));
+		t.fail('(A) help: ' + data.toString('utf8'));
 	});
 	child.on('close', code => {
-		t.equals(code, 0, '(MAIN) help');
+		t.equals(code, 0, '(A) help');
 	});
 	
 	// (test_doc_twitter2pg) Test show doc twitter2pg
 	var child = spawn('node', ['./bin/twitter2pg', 'doc', 'twitter2pg']);
 	child.stderr.on('data', data => {
-		t.fail('(MAIN) doc twitter2pg: ' + data.toString('utf8'));
+		t.fail('(A) doc twitter2pg: ' + data.toString('utf8'));
 	});
 	child.on('close', code => {
-		t.equals(code, 0, '(MAIN) doc twitter2pg');
+		t.equals(code, 0, '(A) doc twitter2pg');
 	});
 	
 	// (test_doc_twitter) Test show doc twitter
 	var child = spawn('node', ['./bin/twitter2pg', 'doc', 'twitter']);
 	child.stderr.on('data', data => {
-		t.fail('(MAIN) doc twitter: ' + data.toString('utf8'));
+		t.fail('(A) doc twitter: ' + data.toString('utf8'));
 	});
 	child.on('close', code => {
-		t.equals(code, 0, '(MAIN) doc twitter');
+		t.equals(code, 0, '(A) doc twitter');
 	});
 	
 	// (test_doc_pg) Test show doc pg
 	var child = spawn('node', ['./bin/twitter2pg', 'doc', 'pg']);
 	child.stderr.on('data', data => {
-		t.fail('(MAIN) doc pg: ' + data.toString('utf8'));
+		t.fail('(A) doc pg: ' + data.toString('utf8'));
 	});
 	child.on('close', code => {
-		t.equals(code, 0, '(MAIN) doc pg');
+		t.equals(code, 0, '(A) doc pg');
 	});
 	
 	// (test_file) Test create env file
 	var child = spawn('node', ['./bin/twitter2pg', 'file', './tests/out/.env']);
 	child.stderr.on('data', data => {
-		t.fail('(MAIN) env: ' + data.toString('utf8'));
+		t.fail('(A) env: ' + data.toString('utf8'));
 	});
 	child.on('close', code => {
-		t.equals(code, 0, '(MAIN) env');
+		t.equals(code, 0, '(A) env');
 	});
 	
 	// (test_set) Test set default
 	var child = spawn('node', ['./bin/twitter2pg', 'set', 'file', './tests/out/.env']);
 	child.stderr.on('data', data => {
-		t.fail('(MAIN) set: ' + data.toString('utf8'));
+		t.fail('(A) set: ' + data.toString('utf8'));
 	});
 	child.on('close', code => {
-		t.equals(code, 0, '(MAIN) set');
+		t.equals(code, 0, '(A) set');
 		
 		// (test_delete) Test delete default
 		var child = spawn('node', ['./bin/twitter2pg', 'delete', 'file']);
 		child.stderr.on('data', data => {
-			t.fail('(MAIN) delete: ' + data.toString('utf8'));
+			t.fail('(A) delete: ' + data.toString('utf8'));
 		});
 		child.on('close', code => {
-			t.equals(code, 0, '(MAIN) delete');
+			t.equals(code, 0, '(A) delete');
 		});
 	});
 	
@@ -111,44 +113,45 @@ test('Tests for ' + json.name + ' (' + json.version + ')', t => {
 		host: process.env.PGHOST
 	};
 	pgtools.createdb(config, process.env.PGTESTDATABASE, function (err, res) {
+		t.comment('(B) twitter2pg tests');
 		if (err) {
-			t.fail( '(MAIN) CREATE test database: '+ err);
+			t.fail( '(B) CREATE test database: '+ err);
 			process.exit(-1);
 		}
 		process.env.PGDATABASE = process.env.PGTESTDATABASE;
-		t.pass('(MAIN) CREATE test database');
+		t.pass('(B) CREATE test database');
 		
 		// (test_query_create) Test query CREATE
 		var child = spawn('node', ['./bin/twitter2pg', 'query', 'CREATE TABLE IF NOT EXISTS twitter_data(tweets jsonb);']);
 		child.stderr.on('data', data => {
-			t.fail('(MAIN) query CREATE: ' + data.toString('utf8'));
+			t.fail('(B) query CREATE: ' + data.toString('utf8'));
 		});
 		child.on('close', code => {
-			t.equals(code, 0, '(MAIN) query CREATE');
+			t.equals(code, 0, '(B) query CREATE');
 			
 			// (test_twitter2pg_get) Test twitter2pg GET
 			var child = spawn('node', ['./bin/twitter2pg']);
 			child.stderr.on('data', data => {
-				t.fail('(MAIN) twitter2pg GET: ' + data.toString('utf8'));
+				t.fail('(B) twitter2pg GET: ' + data.toString('utf8'));
 			});
 			child.on('close', code => {
-				t.equals(code, 0, '(MAIN) twitter2pg GET');
+				t.equals(code, 0, '(B) twitter2pg GET');
 				
 				// (test_twitter2pg_stream) Test twitter2pg STREAM
 				var child = spawn('node', ['./bin/twitter2pg', '--twitter.method stream', '--twitter.path statuses/filter', '--twitter.params "{\"track\": \"twitter\"}"']);
 				child.stderr.on('data', data => {
-					t.fail('(MAIN) twitter2pg STREAM: ' + data.toString('utf8'));
+					t.fail('(B) twitter2pg STREAM: ' + data.toString('utf8'));
 				});
 				child.stdout.on('data', data => {
-					t.pass('(MAIN) twitter2pg STREAM');
+					t.pass('(B) twitter2pg STREAM');
 					
 					// (test_db_drop) Drop test database
 					pgtools.dropdb(config, process.env.PGTESTDATABASE, function (err, res) {
 						if (err) {
-							t.fail( '(MAIN) DROP test database: '+ err);
+							t.fail( '(B) DROP test database: '+ err);
 							process.exit(-1);
 						}
-						t.pass('(MAIN) DROP test database');
+						t.pass('(B) DROP test database');
 						process.exit(0);
 					});
 				});
