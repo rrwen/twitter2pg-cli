@@ -25,7 +25,7 @@ TWITTER_ACCESS_TOKEN_KEY=***
 TWITTER_ACCESS_TOKEN_SECRET=***
 PGHOST=localhost
 PGPORT=5432
-PGDATABASE=twitter2pg_database
+PGTESTDATABASE=twitter2pgcli_database
 PGUSER=super_user
 PGPASSWORD=***
 ```

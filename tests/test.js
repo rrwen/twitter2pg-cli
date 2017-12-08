@@ -4,6 +4,7 @@
 // (packages) Package dependencies
 var fs = require('fs');
 var moment = require('moment');
+var pgtools = require('pgtools');
 var test = require('tape');
 
 const {spawn} = require('child_process');
@@ -102,38 +103,54 @@ test('Tests for ' + json.name + ' (' + json.version + ')', t => {
 		});
 	});
 	
-	// (test_query_create) Test query CREATE
-	var child = spawn('node', ['./bin/twitter2pg', 'query', 'CREATE TABLE IF NOT EXISTS twitter_data(tweets jsonb);']);
-	child.stderr.on('data', data => {
-		t.fail('(MAIN) query CREATE: ' + data.toString('utf8'));
-	});
-	child.on('close', code => {
-		t.equals(code, 0, '(MAIN) query CREATE');
+	// (test_db_create) Create test database
+	var config = {
+		user: process.env.PGUSER,
+		password: process.env.PGPASSWORD,
+		port: process.env.PGPORT,
+		host: process.env.PGHOST
+	};
+	pgtools.createdb(config, process.env.PGTESTDATABASE, function (err, res) {
+		if (err) {
+			t.fail( '(MAIN) CREATE test database: '+ err);
+			process.exit(-1);
+		}
+		process.env.PGDATABASE = process.env.PGTESTDATABASE;
+		t.pass('(MAIN) CREATE test database');
 		
-		// (test_twitter2pg_get) Test twitter2pg GET
-		var child = spawn('node', ['./bin/twitter2pg']);
+		// (test_query_create) Test query CREATE
+		var child = spawn('node', ['./bin/twitter2pg', 'query', 'CREATE TABLE IF NOT EXISTS twitter_data(tweets jsonb);']);
 		child.stderr.on('data', data => {
-			t.fail('(MAIN) twitter2pg GET: ' + data.toString('utf8'));
+			t.fail('(MAIN) query CREATE: ' + data.toString('utf8'));
 		});
 		child.on('close', code => {
-			t.equals(code, 0, '(MAIN) twitter2pg GET');
+			t.equals(code, 0, '(MAIN) query CREATE');
 			
-			// (test_twitter2pg_stream) Test twitter2pg STREAM
-			var child = spawn('node', ['./bin/twitter2pg', '--twitter.method stream', '--twitter.path statuses/filter', '--twitter.params "{\"track\": \"twitter\"}"']);
+			// (test_twitter2pg_get) Test twitter2pg GET
+			var child = spawn('node', ['./bin/twitter2pg']);
 			child.stderr.on('data', data => {
-				t.fail('(MAIN) twitter2pg STREAM: ' + data.toString('utf8'));
+				t.fail('(MAIN) twitter2pg GET: ' + data.toString('utf8'));
 			});
-			child.stdout.on('data', data => {
-				t.pass('(MAIN) twitter2pg STREAM');
+			child.on('close', code => {
+				t.equals(code, 0, '(MAIN) twitter2pg GET');
 				
-				// (test_query_drop) Test query DROP
-				var child = spawn('node', ['./bin/twitter2pg', 'query', 'DROP TABLE twitter_data;']);
+				// (test_twitter2pg_stream) Test twitter2pg STREAM
+				var child = spawn('node', ['./bin/twitter2pg', '--twitter.method stream', '--twitter.path statuses/filter', '--twitter.params "{\"track\": \"twitter\"}"']);
 				child.stderr.on('data', data => {
-					t.fail('(MAIN) query DROP: ' + data.toString('utf8'));
+					t.fail('(MAIN) twitter2pg STREAM: ' + data.toString('utf8'));
 				});
-				child.on('close', code => {
-					t.equals(code, 0, '(MAIN) query DROP');
-					process.exit(0);
+				child.stdout.on('data', data => {
+					t.pass('(MAIN) twitter2pg STREAM');
+					
+					// (test_db_drop) Drop test database
+					pgtools.dropdb(config, process.env.PGTESTDATABASE, function (err, res) {
+						if (err) {
+							t.fail( '(MAIN) DROP test database: '+ err);
+							process.exit(-1);
+						}
+						t.pass('(MAIN) DROP test database');
+						process.exit(0);
+					});
 				});
 			});
 		});

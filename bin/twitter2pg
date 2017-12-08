@@ -96,6 +96,7 @@ if (cmd == 'query') {
 		})
 		.catch(err => {
 			console.error('\nError:\n', err.message);
+			process.exit(1);
 		});
 }
 
@@ -207,7 +208,7 @@ if (argv._.length < 1) {
 				process.exit(0);
 			})
 			.catch(err => {
-				console.error(quote + new Date().toISOString() + quote + delim + quote + 'error' + quote + delim + quote + err[0].message + quote + delim + quote + JSON.stringify(err).replace(/"/g, '""') + quote + delim);
+				console.error(quote + new Date().toISOString() + quote + delim + quote + 'error' + quote + delim + quote + '' + quote + delim + quote + JSON.stringify(err).replace(/"/g, '""') + quote + delim);
 				process.exit(1);
 			});
 	}
