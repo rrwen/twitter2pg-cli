@@ -38,6 +38,8 @@ twitter2pg doc twitter
 twitter2pg doc pg
 ```
 
+See [twitter2pg](https://rrwen.github.io/twitter2pg) for programmatic usage.
+
 ### Environment File
 
 Create a template `.env` file for Twitter and PostgreSQL details:
@@ -153,8 +155,6 @@ pm2 start path/to/script.js
 pm2 save
 pm2 list
 ```
-
-See [twitter2pg](https://rrwen.github.io/twitter2pg) for programmatic usage.
 
 ## Contributions
 
