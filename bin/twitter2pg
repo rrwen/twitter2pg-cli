@@ -5,7 +5,7 @@
 
 var fs = require('fs');
 var path = require('path');
-var twitter2pg = require('twitter2pg');
+var twitter2pgcli = require(path.join(__dirname, '../index.js'));
 
 var defaultPath = path.join(__dirname, 'default.json');
 var defaultJSON = require(defaultPath);
@@ -14,14 +14,15 @@ var defaultJSON = require(defaultPath);
 var argv = require('yargs')
 	.default(defaultJSON)
 	.usage('\nCommand line tool for extracting Twitter data to PostgreSQL databases.\n\nUsage: \n\  $0 <command>\n\  $0 [options]')
-	.command('defaults', 'View default options')
-	.command('reset', 'Reset default options')
 	.command('clear', 'Clear default options')
-	.command('set <option> <value>', 'Set default options')
+	.command('defaults', 'View default options')
 	.command('delete <option>', 'Delete default options')
 	.command('doc <type>', 'Open documentation in web browser')
-	.command('query <sql>', 'Run a PostgreSQL query')
 	.command('file <path>', 'Initialize environment file')
+	.command('reset', 'Reset default options')
+	.command('save <script>', 'Save script with current options')
+	.command('set <option> <value>', 'Set default options')
+	.command('query <sql>', 'Run a PostgreSQL query')
 	.alias('f', 'file')
 	.describe('file', 'Path to environment file for storing API keys and connections')
 	.describe('twitter.method', 'get/post/delete/stream')
@@ -57,6 +58,7 @@ var argv = require('yargs')
 	.example('\n$0 query "CREATE TABLE twitter_data(tweets jsonb);"', '\nCreate a table to store tweets')
 	.example('\n$0', '\nExtract twitter data to table')
 	.example('$0 > log.csv', 'Extract and log twitter data to table')
+	.example('$0 save path/script.js', 'Save script with options')
 	.argv;
 var cmd = argv._[0];
 
@@ -65,7 +67,7 @@ if (argv.file != undefined) {
 	require('dotenv').config({path: argv.file});
 }
 
-// (command_docs) Open docs in browser
+// (command_doc) Open docs in browser
 if (cmd == 'doc') {
 	var opn = require('opn');
 	if (argv.type.toLowerCase() == 'twitter2pg') {
@@ -100,7 +102,7 @@ if (cmd == 'query') {
 		});
 }
 
-// (command_init) Initialize options file
+// (command_fiule) Initialize options file
 if (cmd == 'file') {
 	var templatePath = path.join(__dirname, 'template.env');
 	var read = fs.createReadStream(templatePath);
@@ -128,7 +130,7 @@ if (cmd == 'reset') {
 	console.log('Reset defaults');
 }
 
-// (command_reset) Reset default options
+// (command_clear) Clear default options
 if (cmd == 'clear') {
 	defaultJSON = {};
 	fs.writeFileSync(defaultPath, JSON.stringify(defaultJSON));
@@ -149,67 +151,20 @@ if (cmd == 'delete') {
 	console.log('Delete default', argv.option);
 }
 
-// (command_run) Run twitter2pg
+// (command) Run twitter2pg
 if (argv._.length < 1) {
-	
-	// (command_run_options) Default run options
-	argv.twitter = argv.twitter || {};
-	argv.twitter.method = argv.twitter.method || process.env.TWITTER_METHOD || 'get';
-	argv.twitter.path =argv.twitter.path || process.env.TWITTER_PATH || 'search/tweets';
-	argv.twitter.params = argv.twitter.params || process.env.TWITTER_PARAMS || {q:'twitter'};
-	argv.pg.table = argv.pg.table || process.env.PGTABLE || 'twitter2pg_table';
-	argv.pg.column = argv.pg.column || process.env.PGCOLUMN || 'tweets';
-	argv.pg.query = argv.pg.query || process.env.PGQUERY || 'INSERT INTO $options.pg.table ($options.pg.column) VALUES ($1);';
-	
-	// (command_run_info) Information JSON
-	var quote = '"';
-	var delim = ",";
-	var info = {
-		twitter: {
-			method: argv.twitter.method,
-			path: argv.twitter.path,
-			params: argv.twitter.params
-		},
-		pg: {
-			table: argv.pg.table,
-			column: argv.pg.column,
-			query: argv.pg.query
+	twitter2pgcli(argv);
+}
+
+// (command_save) Save runnable script with current options
+if (cmd == 'save') {
+	delete argv._;
+	var script = '// Created with command `twitter2pg save <script>`\n// See twitter2pg-cli (https://www.npmjs.com/package/twitter2pg-cli)\n\n' + "var twitter2pgcli = require('twitter2pg-cli);\n\n"  + 'var argv = ' + JSON.stringify(argv, null, 4) + '\n\ntwitter2pgcli(argv);\n';
+	var scriptPath = argv.script;
+	fs.writeFile(scriptPath, script, function (err) {
+		if (err) {
+			return console.error(err);
 		}
-	}
-	header = 'time_iso8601' + delim + 'status' + delim + 'message' + delim + 'json\n'
-	info = quote + new Date().toISOString() + quote + delim + quote + 'start' + quote + delim  + quote + 'Options' + quote + delim + quote + JSON.stringify(info).replace(/"/g, '""') + quote;
-	console.log(header + info);
-	
-	// (command_stream) Twitter stream API
-	if (argv.twitter.method == 'stream') {
-		
-		// (command_stream_verbose) Success log messages for streams
-		if (argv.verbose) {
-			argv.stream = {};
-			argv.stream.callback = function(err, data) {
-				console.log(quote + new Date().toISOString() + quote + delim + quote + 'success' + quote + delim + delim);
-			};
-		}
-		
-		// (command_stream_run) Start streaming process and log errors
-		var stream = twitter2pg(argv);
-		stream.on('error', function(err) {
-			console.error(quote + new Date().toISOString() + quote + delim + quote + 'error' + quote + delim + quote + err.message + quote + delim + quote + JSON.stringify(err) + quote + delim);
-		});
-	} else {
-		
-		// (command_rest) Twitter REST API
-		twitter2pg(argv)
-			.then(data => {
-				if (argv.verbose) {
-					console.log(quote + new Date().toISOString() + quote + delim + quote + 'success' + quote + delim + delim);
-				}
-				data.pg.client.end();
-				process.exit(0);
-			})
-			.catch(err => {
-				console.error(quote + new Date().toISOString() + quote + delim + quote + 'error' + quote + delim + quote + '' + quote + delim + quote + JSON.stringify(err).replace(/"/g, '""') + quote + delim);
-				process.exit(1);
-			});
-	}
+		console.log('Saved ' + scriptPath);
+	});
 }

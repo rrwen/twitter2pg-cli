@@ -102,7 +102,34 @@ test('Tests for ' + json.name + ' (' + json.version + ')', t => {
 		});
 		child.on('close', code => {
 			t.equals(code, 0, '(A) delete');
+			
+			// (test_clear) Test clear default
+			var child = spawn('node', ['./bin/twitter2pg', 'clear']);
+			child.stderr.on('data', data => {
+				t.fail('(A) clear: ' + data.toString('utf8'));
+			});
+			child.on('close', code => {
+				t.equals(code, 0, '(A) clear');
+				
+				// (test_reset) Test reset default
+				var child = spawn('node', ['./bin/twitter2pg', 'reset']);
+				child.stderr.on('data', data => {
+					t.fail('(A) reset: ' + data.toString('utf8'));
+				});
+				child.on('close', code => {
+					t.equals(code, 0, '(A) reset');
+				});
+			});
 		});
+	});
+	
+	// (test_save) Test save script
+	var child = spawn('node', ['./bin/twitter2pg', 'save', './tests/out/script.js']);
+	child.stderr.on('data', data => {
+		t.fail('(A) save: ' + data.toString('utf8'));
+	});
+	child.on('close', code => {
+		t.equals(code, 0, '(A) save');
 	});
 	
 	// (test_db_create) Create test database

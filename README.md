@@ -141,6 +141,19 @@ Stream Twitter data into PostgreSQL table given setup options:
 twitter2pg > log.csv
 ```
 
+Stream Twitter data into a PostgreSQL table as a service:
+
+1. Save a [node](https://nodejs.org/api/cli.html) runnable script of the current options
+2. Install [pm2](https://www.npmjs.com/package/pm2) (`npm install pm2 -g`)
+2. Use `pm2`  to run the saved script as a service
+
+```
+twitter2pg save path/to/script.js
+pm2 start path/to/script.js
+pm2 save
+pm2 list
+```
+
 See [twitter2pg](https://rrwen.github.io/twitter2pg) for more details.
 
 ## Contributions
@@ -198,7 +211,7 @@ For more information, see [Developer Install](#developer-install) and [Implement
 Install the latest developer version with `npm` from github:
 
 ```
-npm install git+https://github.com/rrwen/twitter2pg-cli
+npm install -g git+https://github.com/rrwen/twitter2pg-cli
 ```
   
 Install from `git` cloned source:
@@ -210,7 +223,7 @@ Install from `git` cloned source:
 ```
 git clone https://github.com/rrwen/twitter2pg-cli
 cd twitter2pg-cli
-npm install
+npm -g install
 ```
 
 ### Tests
