@@ -60,7 +60,11 @@ twitter2pg set file path/to/.env
 
 Send  `query`a query to a PostgreSQL database after defining and setting the default [Environment File](#environment-file).  
   
-The usage examples require a table named `twitter_data` which can be created below:
+The usage examples require a table named `twitter_data` which can be created with the command below:
+
+```
+twitter2pg query "CREATE TABLE twitter_data(tweets jsonb);"
+```
 
 row | tweets
 --- | ---
@@ -68,10 +72,6 @@ row | tweets
 2 | {...}
 3 | {...}
 ... | ...
-
-```
-twitter2pg query "CREATE TABLE twitter_data(tweets jsonb);"
-```
 
 ### REST API
 
