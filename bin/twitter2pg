@@ -159,8 +159,8 @@ if (argv._.length < 1) {
 // (command_save) Save runnable script with current options
 if (cmd == 'save') {
 	delete argv._;
-	var script = '// Created with command `twitter2pg save <script>`\n// See twitter2pg-cli (https://www.npmjs.com/package/twitter2pg-cli)\n\n' + "var twitter2pgcli = require('twitter2pg-cli);\n\n"  + 'var argv = ' + JSON.stringify(argv, null, 4) + '\n\ntwitter2pgcli(argv);\n';
 	var scriptPath = argv.script;
+	var script = '// Created with command `twitter2pg save <script>`\n// See twitter2pg-cli (https://www.npmjs.com/package/twitter2pg-cli)\n\n' + 'var twitter2pgcli = require(\'' + path.join(__dirname, '../index.js') + '' + '\');\n\n'  + 'var argv = ' + JSON.stringify(argv, null, 4) + ';\n\ntwitter2pgcli(argv);\n';
 	fs.writeFile(scriptPath, script, function (err) {
 		if (err) {
 			return console.error(err);
