@@ -1,6 +1,6 @@
 {
   "name": "twitter2pg-cli",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Command line tool for extracting Twitter data to PostgreSQL databases",
   "main": "index.js",
   "bin": {
@@ -29,10 +29,7 @@
   },
   "dependencies": {
     "twitter2pg": "^1.0.0",
-    "yargs": "^10.0.3",
-    "dotenv": "^4.0.0",
-    "opn": "^5.1.0",
-    "pg": "^7.4.0"
+    "yargs": "^10.0.3"
   },
   "optionalDependencies": {
     "dotenv": "^4.0.0",
