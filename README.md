@@ -86,7 +86,7 @@ Setup default twitter options:
 ```
 twitter2pg set twitter.method get
 twitter2pg set twitter.path search/tweets
-twitter2pg set twitter.params '{"q":"twitter"}'
+twitter2pg set twitter.params "{\"q\":\"twitter\"}"
 ```
 
 Setup default PostgreSQL options:
@@ -120,7 +120,7 @@ Setup default twitter options:
 ```
 twitter2pg set twitter.method stream
 twitter2pg set twitter.path statuses/filter
-twitter2pg set twitter.params '{"track":"twitter"}'
+twitter2pg set twitter.params "{\"track\":\"twitter\"}"
 ```
 
 Setup default PostgreSQL options:
