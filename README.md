@@ -154,7 +154,7 @@ pm2 save
 pm2 list
 ```
 
-See [twitter2pg](https://rrwen.github.io/twitter2pg) for more details.
+See [twitter2pg](https://rrwen.github.io/twitter2pg) for programmatic usage.
 
 ## Contributions
 
