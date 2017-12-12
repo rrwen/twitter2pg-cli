@@ -38,7 +38,7 @@ twitter2pg doc twitter
 twitter2pg doc pg
 ```
 
-See [twitter2pg](https://rrwen.github.io/twitter2pg) for programmatic usage.
+See [twitter2pg](https://www.npmjs.com/package/twitter2pg) for programmatic usage.
 
 ### Environment File
 
