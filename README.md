@@ -60,7 +60,7 @@ twitter2pg set file path/to/.env
 
 ### PostgreSQL Query
 
-Send  `query`a query to a PostgreSQL database after defining and setting the default [Environment File](#environment-file).  
+Send a query to a PostgreSQL database after defining and setting the default [Environment File](#environment-file).  
   
 The usage examples require a table named `twitter_data` which can be created with the command below:
 
@@ -153,7 +153,6 @@ Stream Twitter data into a PostgreSQL table as a service:
 twitter2pg save path/to/script.js
 pm2 start path/to/script.js
 pm2 save
-pm2 list
 ```
 
 ## Contributions
