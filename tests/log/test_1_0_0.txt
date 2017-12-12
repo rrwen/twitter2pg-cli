@@ -1,17 +1,17 @@
 TAP version 13
-# Tests for twitter2pg-cli (0.0.3)
+# Tests for twitter2pg-cli (1.0.0)
 # Node.js (v7.9.0)
 # Description: Command line tool for extracting Twitter data to PostgreSQL databases
-# Date: 2017-12-12 04:21:08
-# Dependencies: twitter2pg (^1.0.0), yargs (^10.0.3)
+# Date: 2017-12-12 04:25:11
+# Dependencies: twitter2pg (^1.1.0), yargs (^10.0.3)
 # Developer: moment (^2.19.1), pgtools (^0.3.0), tape (^4.8.0)
 # (A) command tests
 ok 1 (A) help
-ok 2 (A) save
+ok 2 (A) env
 ok 3 (A) set
-ok 4 (A) env
-ok 5 (A) doc twitter2pg
-ok 6 (A) doc twitter
+ok 4 (A) save
+ok 5 (A) doc twitter
+ok 6 (A) doc twitter2pg
 ok 7 (A) doc pg
 ok 8 (A) delete
 ok 9 (A) clear

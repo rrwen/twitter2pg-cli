@@ -43,8 +43,7 @@ module.exports = function(argv) {
 		
 		// (command_stream_verbose) Success log messages for streams
 		if (argv.verbose) {
-			argv.stream = {};
-			argv.stream.callback = function(err, data) {
+			argv.twitter.stream = function(err, data) {
 				console.log(quote + new Date().toISOString() + quote + delim + quote + 'success' + quote + delim + delim);
 			};
 		}
