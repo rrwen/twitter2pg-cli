@@ -165,6 +165,7 @@ The logs are in the following format:
 * `json`: [JSON](https://www.json.org/) object containing relevant debugging information
 
 time_iso8601 | status | message | json
+--- | --- | --- | ---
 ... | ... | ... | ...
 
 ## Contributions
